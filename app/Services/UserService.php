@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Interfaces\UserServiceInterface;
+use App\Notifications\VerifyUserEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -19,12 +20,16 @@ class UserService implements UserServiceInterface
             ]);
         }
 
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'cpf' => $data['cpf'],
             'password' => Hash::make($data['password']),
             'balance' => 0.00,
         ]);
+
+        $user->notify(new VerifyUserEmail($user));
+
+        return $user;
     }
 }

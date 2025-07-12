@@ -12,7 +12,7 @@ class AuthUserForm extends Form
     public $email = '';
     #[Rule(['required', 'string', 'max:255'])]
     public $name = '';
-    #[Rule(['required', new CpfValidationRule()])]
+    #[Rule(['required', new CpfValidationRule(), 'unique:users,cpf'])]
     public $cpf = '';
     #[Rule(['required', 'min:6', 'confirmed'])]
     public $password = '';
@@ -34,6 +34,7 @@ class AuthUserForm extends Form
             'password.min' => 'A senha deve ter pelo menos 8 caracteres.',
             'password.confirmed' => 'A confirmação da senha não confere.',
 
+            'cpf.unique:users' => 'Cpf ja cadastrado.',
         ];
     }
 }
