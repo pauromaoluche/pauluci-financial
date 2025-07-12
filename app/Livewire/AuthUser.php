@@ -25,12 +25,7 @@ class AuthUser extends Component
         try {
             $this->form->validate();
 
-            $user = $this->userService->createUser([
-                'name' => $this->form->name,
-                'email' => $this->form->email,
-                'cpf' => $this->form->cpf,
-                'password' => $this->form->password,
-            ]);
+            $user = $this->userService->createUser($this->form->all());
 
             // Loga o usuário após o registro
             Auth::login($user);

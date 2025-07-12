@@ -22,6 +22,7 @@ class UserService implements UserServiceInterface
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'cpf' => $data['cpf'],
             'password' => Hash::make($data['password']),
             'balance' => 0.00,
         ]);
