@@ -26,11 +26,10 @@
         </div>
     </header>
     <main class="flex-grow">
-        @yield('content')
+        {{ $slot }}
     </main>
-    <!-- Rodapé -->
     <footer class="bg-white py-6 text-center text-sm text-gray-400">
-        © 2025 MyBank S.A. • Todos os direitos reservados
+        © 2025 MyBank S.A. • Todos os direitos reservados
     </footer>
     @livewireScripts
     @vite('resources/js/app.js')

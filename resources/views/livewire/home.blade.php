@@ -1,5 +1,4 @@
-@extends('layouts.home')
-@section('content')
+<div>
     <section class="relative isolate overflow-hidden bg-white">
         <!-- Ilustração de fundo -->
         <div aria-hidden="true" class="absolute inset-0 -z-10 bg-gradient-to-br from-blue-50 via-white to-transparent">
@@ -48,4 +47,4 @@
             </div>
         </div>
     </section>
-@endsection
+</div>
