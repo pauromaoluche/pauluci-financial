@@ -47,6 +47,33 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
+    laravel-queue-worker:
+        build: # Use a mesma build que o laravel.test para garantir as mesmas dependências e ambiente
+            context: './vendor/laravel/sail/runtimes/8.4'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: 'sail-8.4/app' # Reutiliza a imagem base para consistência
+        command: sh -c "php /var/www/html/artisan queue:work --verbose --tries=3 --timeout=90" # Ajuste para sua conexão e tempo limite
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            APP_ENV: '${APP_ENV}'
+            DB_CONNECTION: '${DB_CONNECTION}'
+            DB_HOST: '${DB_HOST}'
+            DB_PORT: '${DB_PORT}'
+            DB_DATABASE: '${DB_DATABASE}'
+            DB_USERNAME: '${DB_USERNAME}'
+            DB_PASSWORD: '${DB_PASSWORD}'
+            QUEUE_CONNECTION: 'database' # Configure sua conexão de fila aqui (database, redis, sqs, etc.)
+            # Adicione quaisquer outras variáveis de ambiente que seus jobs em fila possam precisar
+        volumes:
+            - '.:/var/www/html' # Monte o código do projeto
+        networks:
+            - sail
+        depends_on:
+            - mysql
+        restart: unless-stopped
 networks:
     sail:
         driver: bridge
