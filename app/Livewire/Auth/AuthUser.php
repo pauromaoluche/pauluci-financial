@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Auth;
 
 use App\Interfaces\UserServiceInterface;
 use App\Livewire\Forms\AuthUserForm;
@@ -11,6 +11,10 @@ use Livewire\Component;
 
 class AuthUser extends Component
 {
+    public $mode = 'login';
+    public string $login_email = '';
+    public string $login_password = '';
+
     public AuthUserForm $form;
 
     protected UserServiceInterface $userService;
@@ -28,7 +32,6 @@ class AuthUser extends Component
 
             $user = $this->userService->createUser($this->form->all());
 
-            // Loga o usuário após o registro
             Auth::login($user);
             session()->regenerate();
 
@@ -41,8 +44,31 @@ class AuthUser extends Component
             Log::error('Erro ao registrar usuário: ' . $e->getMessage());
         }
     }
+
+    public function login()
+    {
+
+        $this->validate([
+            'login_email' => 'required|email',
+            'login_password' => 'required',
+        ]);
+
+        if (!Auth::attempt([
+            'email' => $this->login_email,
+            'password' => $this->login_password,
+        ])) {
+            throw ValidationException::withMessages([
+                'login_email' => 'O E-mail pode estar errado.',
+                'login_password' => 'A senha pode estar errada.',
+            ]);
+        }
+
+        session()->regenerate();
+
+        return redirect()->route('dashboard.index');
+    }
     public function render()
     {
-        return view('livewire.auth-user')->layout('layouts.home');
+        return view('livewire.auth.auth-user')->layout('layouts.home');
     }
 }

@@ -1,18 +1,17 @@
 <?php
 
 use App\Http\Middleware\AuthenticationMiddleware;
-use App\Livewire\AuthUser;
 use App\Livewire\Dashboard;
 use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Livewire\Auth\AuthUser as AuthAuthUser;
 use App\Livewire\Auth\VerifyEmailNotice;
-use Illuminate\Support\Facades\Auth;
 
 Route::get('/', Home::class)->name('index');
 
-Route::get('auth', AuthUser::class)->name('auth')->middleware('guest');
+Route::get('auth', AuthAuthUser::class)->name('auth')->middleware('guest');
 
 Route::middleware([AuthenticationMiddleware::class, 'verified'])
     ->prefix('dashboard')
