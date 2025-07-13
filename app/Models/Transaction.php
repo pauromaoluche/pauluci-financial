@@ -41,8 +41,13 @@ class Transaction extends Model
         return $this->belongsTo(TypeTransaction::class);
     }
 
-        public function statusTransaction()
+    public function statusTransaction()
     {
         return $this->belongsTo(StatusTransaction::class);
+    }
+
+    public function transactionStatusHistory()
+    {
+        return $this->hasMany(TransactionStatusHistory::class);
     }
 }
