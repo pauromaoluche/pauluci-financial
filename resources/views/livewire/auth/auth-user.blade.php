@@ -67,7 +67,7 @@
             @if ($mode === 'register')
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-600">Senha</label>
-                    <input type="password" id="password" name="password" required wire:model.live="form.password"
+                    <input type="password" id="password" name="password" required wire:model.defer="form.password"
                         class="mt-1 w-full rounded-xl border-gray-300 px-4 py-2.5 shadow-sm ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     @error('form.password')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
@@ -77,7 +77,7 @@
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-600">Confirmar
                         senha</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" required required
-                        wire:model.live="form.password_confirmation"
+                        wire:model.defer="form.password_confirmation"
                         class="mt-1 w-full rounded-xl border-gray-300 px-4 py-2.5 shadow-sm ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                 </div>
                 <div class="text-sm text-gray-600">
