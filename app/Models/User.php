@@ -23,8 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'cpf',
-        'balance'
+        'cpf'
     ];
 
     /**
@@ -36,6 +35,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
+
+    public function account()
+    {
+        return $this->hasOne(Account::class);
+    }
 
     /**
      * Get the attributes that should be cast.
