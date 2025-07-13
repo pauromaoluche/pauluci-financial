@@ -22,7 +22,10 @@ services:
         networks:
             - sail
         depends_on:
-            - mysql
+            mysql:
+                condition: service_healthy
+            reverb:
+                condition: service_started
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -84,7 +87,38 @@ services:
         networks:
             - sail
         depends_on:
-            - mysql
+            mysql:
+                condition: service_healthy
+        restart: unless-stopped
+
+    reverb:
+        build: # Use a mesma build do laravel.test para garantir o ambiente PHP e as dependências Laravel
+            context: './vendor/laravel/sail/runtimes/8.4'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: 'sail-8.4/app' # Reutiliza a imagem base para consistência
+        command: php artisan reverb:start --host=0.0.0.0 --port=${REVERB_PORT:-8080} # Inicia o servidor Reverb
+        ports:
+            - '${REVERB_PORT:-8080}:${REVERB_PORT:-8080}' # Mapeia a porta do Reverb para o host
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            APP_ENV: '${APP_ENV}'
+            # Variáveis do Reverb que ele precisa para iniciar
+            REVERB_APP_ID: '${REVERB_APP_ID}'
+            REVERB_APP_KEY: '${REVERB_APP_KEY}'
+            REVERB_APP_SECRET: '${REVERB_APP_SECRET}'
+            REVERB_HOST: '0.0.0.0' # Importante para escutar em todas as interfaces dentro do container
+            REVERB_PORT: '${REVERB_PORT:-8080}'
+            REVERB_SCHEME: '${REVERB_SCHEME:-http}' # Certifique-se que o scheme está correto (http ou https)
+        volumes:
+            - '.:/var/www/html' # Monta o código do projeto para que o artisan seja encontrado
+        networks:
+            - sail
+        depends_on:
+            mysql:
+                condition: service_healthy
         restart: unless-stopped
 networks:
     sail:
