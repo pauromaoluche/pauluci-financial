@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\DTOs\CreateTransactionStatusHistoryDTO;
 use App\DTOs\DepositDTO;
 use App\DTOs\TransactionDTO;
 use App\Interfaces\DepositServiceInterface;
@@ -37,22 +36,13 @@ class DepositService implements DepositServiceInterface
             ]);
         }
 
-        $account = $this->accountRepository->findByAccountNumber($data->accountNumber);
-
-        if (!$account) {
-            //chamar fila e disparar evento no front
-            throw ValidationException::withMessages([
-                'account' => ['Conta destinataria não existe.']
-            ]);
-        }
-
         $pendingStatus  = $this->statusTransactionRepository->pendingStatus();
         $depositType = $this->typeTransactionRepository->depositType();
 
         $transactionDTO = new TransactionDTO(
             accountNumber: $data->accountNumber,
             sender_account_number: null,
-            recipient_account_number: $account->account_number,
+            recipient_account_number: $data->accountNumber,
             type_transaction_id: $depositType->id,
             amount: $data->amount,
             status_transaction_id: $pendingStatus->id,

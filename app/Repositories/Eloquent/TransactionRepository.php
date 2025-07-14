@@ -4,18 +4,10 @@ namespace App\Repositories\Eloquent;
 
 use App\DTOs\TransactionDTO;
 use App\Models\Transaction;
-use App\Repositories\AccountRepositoryInterface;
 use App\Repositories\TransactionRepositoryInterface;
 
 class TransactionRepository implements TransactionRepositoryInterface
 {
-
-    protected AccountRepositoryInterface $accountRepository;
-
-    public function __construct(AccountRepositoryInterface $accountRepository)
-    {
-        $this->accountRepository = $accountRepository;
-    }
     /**
      * Cria uma nova transaction.
      *
@@ -24,8 +16,6 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function createTransaction(TransactionDTO $data): Transaction
     {
-        $account = $this->accountRepository->findByAccountNumber($data->accountNumber);
-
         /** @var Transaction $account */
         return $account->incomingTransactions()->create([
             'sender_account_number' => null,
