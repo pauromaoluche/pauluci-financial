@@ -8,8 +8,10 @@ use App\Interfaces\UserServiceInterface;
 use App\Repositories\AccountRepositoryInterface;
 use App\Repositories\Eloquent\AccountRepository;
 use App\Repositories\Eloquent\StatusTransactionRepository;
+use App\Repositories\Eloquent\TypeTransactionRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\StatusTransactionRepositoryInterface;
+use App\Repositories\TypeTransactionRepositoryInterface;
 use App\Repositories\UserRepositoryInterface;
 use App\Services\AccountService;
 use App\Services\NotificationService;
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(AccountRepositoryInterface::class, AccountRepository::class);
         $this->app->bind(StatusTransactionRepositoryInterface::class, StatusTransactionRepository::class);
+        $this->app->bind(TypeTransactionRepositoryInterface::class, TypeTransactionRepository::class);
 
         // Bindings dos Serviços
         $this->app->bind(UserServiceInterface::class, UserService::class);
