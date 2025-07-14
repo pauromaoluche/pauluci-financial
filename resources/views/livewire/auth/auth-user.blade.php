@@ -20,7 +20,7 @@
             <h1 class="mt-3 text-2xl font-bold text-gray-800">
                 {{ $mode === 'register' ? 'Crie sua conta' : 'Faça login' }}</h2>
             </h1>
-            <p class="mt-1 text-sm text-gray-500">Leva menos de um minuto para começar a usar o MyBank</p>
+            <p class="mt-1 text-sm text-gray-500">Leva menos de um minuto para começar a usar o {{ config('app.name') }}</p>
         </div>
 
         <form wire:submit.prevent="{{ $mode === 'register' ? 'register' : 'login' }}" class="space-y-4">

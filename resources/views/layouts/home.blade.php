@@ -16,7 +16,7 @@
                 <svg class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M4 4h16v3H4zM3 8h18v2H3zM4 12h16v8H4z" />
                 </svg>
-                <span class="text-lg font-semibold">MyBank</span>
+                <span class="text-lg font-semibold">{{ config('app.name') }}</span>
             </div>
             <nav class="hidden sm:flex items-center gap-6 text-sm">
                 <a href="#features" class="hover:text-blue-600">Recursos</a>
@@ -29,7 +29,7 @@
         {{ $slot }}
     </main>
     <footer class="bg-white py-6 text-center text-sm text-gray-400">
-        © 2025 MyBank S.A. • Todos os direitos reservados
+        © 2025 {{ config('app.name') }} S.A. • Todos os direitos reservados
     </footer>
     @livewireScripts
     @vite('resources/js/app.js')
