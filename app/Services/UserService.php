@@ -1,61 +1,47 @@
 <?php
-// app/Services/UserService.php
+
 namespace App\Services;
 
-use App\Models\User;
+use App\DTOs\CreateUserDTO;
+use App\Repositories\UserRepositoryInterface;
+use App\Interfaces\AccountServiceInterface;
+use App\Interfaces\NotificationServiceInterface;
 use App\Interfaces\UserServiceInterface;
-use App\Models\Account;
-use App\Notifications\VerifyUserEmail;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class UserService implements UserServiceInterface
 {
+    public function __construct(
+        protected UserRepositoryInterface $userRepository,
+        protected AccountServiceInterface $accountService,
+        protected NotificationServiceInterface $notificationService
+    ) {
+    }
 
-    public function createUser(array $data): User
+    public function createUser(CreateUserDTO $data): User
     {
-        if (User::where('email', $data['email'])->exists()) {
+        if ($this->userRepository->findByEmail($data->email)) {
             throw ValidationException::withMessages([
-                'email' => ['Este e-mail já está em uso.'],
+                'email' => ['Este e-mail já está em uso.']
             ]);
         }
 
-        //Uso de transaction, pois se der algo errado na criação da conta
         return DB::transaction(function () use ($data) {
-
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'cpf' => $data['cpf'],
-                'password' => Hash::make($data['password']),
+            $user = $this->userRepository->create([
+                'name' => $data->name,
+                'email' => $data->email,
+                'cpf' => $data->cpf,
+                'password' => Hash::make($data->password),
             ]);
 
-            //Gera o numero da conta
-            $accountNumber = $this->generateUniqueAccountNumber();
+            $this->accountService->createAccountForUser($user);
 
-            //cria a conta ligada ao usuário
-            $user->account()->create([
-                'account_number' => $accountNumber,
-                'balance' => 0.00,
-                'active' => true,
-            ]);
+            $this->notificationService->sendEmailVerificationNotification($user);
 
-            //envia e‑mail de verificação
-            $user->notify(new VerifyUserEmail($user));
-
-            // carrega a relação para retornar já com a conta
             return $user->load('account');
         });
-    }
-
-    /** Gera um número de conta único com 10 dígitos */
-    protected function generateUniqueAccountNumber(): string
-    {
-        do {
-            $number = (string) mt_rand(1000000000, 9999999999);
-        } while (Account::where('account_number', $number)->exists());
-
-        return $number;
     }
 }

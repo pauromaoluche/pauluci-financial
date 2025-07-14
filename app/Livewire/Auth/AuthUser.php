@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\DTOs\CreateUserDTO;
 use App\Interfaces\UserServiceInterface;
 use App\Livewire\Forms\AuthUserForm;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,14 @@ class AuthUser extends Component
         try {
             $this->form->validate();
 
-            $user = $this->userService->createUser($this->form->all());
+            $createUserDTO = new CreateUserDTO(
+                $this->form->name,
+                $this->form->email,
+                $this->form->password,
+                $this->form->cpf
+            );
+
+            $user = $this->userService->createUser($createUserDTO);
 
             Auth::login($user);
             session()->regenerate();
