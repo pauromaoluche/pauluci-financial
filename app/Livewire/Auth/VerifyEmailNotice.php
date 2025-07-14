@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Interfaces\NotificationServiceInterface;
 use App\Notifications\VerifyUserEmail;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,13 @@ use Livewire\Component;
 class VerifyEmailNotice extends Component
 {
     public string $status = '';
+
+    protected NotificationServiceInterface $notificationService;
+
+    public function boot(NotificationServiceInterface $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
 
     public function resendVerificationEmail()
     {
@@ -27,7 +35,7 @@ class VerifyEmailNotice extends Component
 
         try {
 
-            Auth::user()->notify(new VerifyUserEmail(Auth::user()));
+            $this->notificationService->sendEmailVerificationNotification(Auth::user());
             $this->status = 'Um novo link de verificação foi enviado para o seu endereço de e-mail.';
         } catch (AuthorizationException $e) {
             // Isso acontece se o middleware 'throttle' impedir o envio

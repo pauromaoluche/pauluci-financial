@@ -34,8 +34,8 @@ class AuthUser extends Component
             $createUserDTO = new CreateUserDTO(
                 $this->form->name,
                 $this->form->email,
-                $this->form->password,
-                $this->form->cpf
+                $this->form->cpf,
+                $this->form->password
             );
 
             $user = $this->userService->createUser($createUserDTO);
