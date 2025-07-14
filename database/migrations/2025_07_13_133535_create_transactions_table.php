@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('sender_account_number');
-            $table->string('recipient_account_number');
+            $table->string('sender_account_number')->nullable();
+            $table->string('recipient_account_number')->nullable();
             $table->foreignId('type_transaction_id')->constrained();
             $table->decimal('amount', 15, 2);
             $table->foreignId('status_transaction_id')->constrained();
