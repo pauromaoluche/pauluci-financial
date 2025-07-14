@@ -1,9 +1,7 @@
 <?php
-// app/Strategies/TransactionConfirmation/DepositConfirmationStrategy.php
 
-namespace App\Strategies\TransactionConfirmation;
+namespace App\Strategies;
 
-use App\DTOs\UpdateTransactionDTO;
 use App\Interfaces\BalanceServiceInterface;
 use App\Interfaces\TransactionConfirmationStrategyInterface;
 use App\Interfaces\NotificationServiceInterface;
@@ -46,7 +44,7 @@ class DepositConfirmationStrategy implements TransactionConfirmationStrategyInte
             $completedStatus = $this->statusTransactionRepository->completedStatus();
 
             $transaction->status_transaction_id = $completedStatus->id;
-            $transaction->description = $completedStatus->id;
+            $transaction->description = $completedStatus->description;
             $this->transactionRepository->update($transaction);
 
             return $transaction;

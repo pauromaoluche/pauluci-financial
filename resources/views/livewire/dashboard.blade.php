@@ -46,13 +46,12 @@
                     </svg>
                     Pagar Conta
                 </button>
-                <button
+                <a href="{{ route('dashboard.deposit') }}"
                     class="flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 shadow ring-1 ring-gray-200 hover:bg-gray-50">
                     <svg class="h-5 w-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 6l4 8H8l4-8z" />
                     </svg>
-                    Depositar
-                </button>
+                    Depositar</a>
             </div>
         </section>
 

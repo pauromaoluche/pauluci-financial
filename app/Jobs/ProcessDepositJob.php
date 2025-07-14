@@ -14,8 +14,6 @@ class ProcessDepositJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
-    public $queue = 'deposits';
-    public $tries = 5;
     protected $depositData;
     /**
      * Create a new job instance.
@@ -23,6 +21,7 @@ class ProcessDepositJob implements ShouldQueue
     public function __construct(DepositDTO $depositDTO)
     {
         $this->depositData = $depositDTO;
+        $this->onQueue('deposit');
     }
 
     /**

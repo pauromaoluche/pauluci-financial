@@ -18,6 +18,7 @@ class TransactionService implements TransactionServiceInterface
         protected TransactionRepositoryInterface $transactionRepository,
         protected TransactionStatusHistoryInterface $transactionStatusHistory,
         protected AccountRepositoryInterface $accountRepository,
+        protected TransactionJobDispatcherService $transactionJobDispatcher,
     ) {
     }
 
@@ -42,7 +43,7 @@ class TransactionService implements TransactionServiceInterface
 
         $this->transactionStatusHistory->createTransactionHistory($transaction);
 
-        ConfirmTransactionJob::dispatch($transaction->id, $queue);
+         $this->transactionJobDispatcher->dispatchConfirmationJob($transaction->id, $queue);
 
         return $transaction;
     }

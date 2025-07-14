@@ -69,7 +69,7 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
         image: 'sail-8.4/app' # Reutiliza a imagem base para consistência
-        command: sh -c "php /var/www/html/artisan queue:work --verbose --tries=3 --timeout=90" # Ajuste para sua conexão e tempo limite
+        command: sh -c "php /var/www/html/artisan queue:work --queue=transfer_in,deposit,notification,email,default --verbose --tries=5 --timeout=90"
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1

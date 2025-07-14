@@ -14,8 +14,7 @@ class TypeTransactionSeeder extends Seeder
     {
         TypeTransaction::insert([
             ['name' => 'deposit', 'description' => 'Depósito Bancario.', 'active' => true, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'transfer_in', 'description' => 'Transferencia Bancaria.', 'active' => true, 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'transfer_out', 'description' => 'Transferencia Recebida.', 'active' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'transfer_in', 'description' => 'Transferencia Bancaria.', 'active' => true, 'created_at' => now(), 'updated_at' => now()]
         ]);
     }
 }

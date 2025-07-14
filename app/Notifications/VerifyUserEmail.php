@@ -20,6 +20,7 @@ class VerifyUserEmail extends Notification implements ShouldQueue
     public function __construct($user)
     {
         $this->user = $user;
+        $this->onQueue('email');
     }
 
     /**

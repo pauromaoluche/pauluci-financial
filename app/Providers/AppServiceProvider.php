@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use App\Interfaces\AccountServiceInterface;
+use App\Interfaces\BalanceServiceInterface;
+use App\Interfaces\DepositServiceInterface;
 use App\Interfaces\NotificationServiceInterface;
 use App\Interfaces\TransactionConfirmationStrategyInterface;
+use App\Interfaces\TransactionJobDispatcherInterface;
 use App\Interfaces\TransactionServiceInterface;
 use App\Interfaces\TransactionStatusHistoryInterface;
 use App\Interfaces\UserServiceInterface;
@@ -21,11 +24,14 @@ use App\Repositories\TransactionStatusHistoryRepositoryInterface;
 use App\Repositories\TypeTransactionRepositoryInterface;
 use App\Repositories\UserRepositoryInterface;
 use App\Services\AccountService;
+use App\Services\BalanceService;
+use App\Services\DepositService;
 use App\Services\NotificationService;
+use App\Services\TransactionJobDispatcherService;
 use App\Services\TransactionService;
 use App\Services\TransactionStatusHistoryService;
 use App\Services\UserService;
-use App\Strategies\TransactionConfirmation\DepositConfirmationStrategy;
+use App\Strategies\DepositConfirmationStrategy;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -48,6 +54,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AccountServiceInterface::class, AccountService::class);
         $this->app->bind(TransactionStatusHistoryInterface::class, TransactionStatusHistoryService::class);
         $this->app->bind(TransactionServiceInterface::class, TransactionService::class);
+        $this->app->bind(TransactionJobDispatcherInterface::class, TransactionJobDispatcherService::class);
+        $this->app->bind(DepositServiceInterface::class, DepositService::class);
+        $this->app->bind(BalanceServiceInterface::class, BalanceService::class);
 
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
 
@@ -57,8 +66,6 @@ class AppServiceProvider extends ServiceProvider
             switch ($typeTransactionId) {
                 case 1:
                     return $app->make(DepositConfirmationStrategy::class);
-                case 2:
-                    return $app->make(TransferConfirmationStrategy::class);
                 default:
                     throw new \InvalidArgumentException("Nenhuma estratégia de confirmação definida para o tipo de transação ID: {$typeTransactionId}");
             }

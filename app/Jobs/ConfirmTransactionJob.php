@@ -14,14 +14,13 @@ class ConfirmTransactionJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable;
 
     protected int $transactionId;
-    public string $queue;
     /**
      * Create a new job instance.
      */
     public function __construct(int $transactionId, string $queueName = 'default')
     {
         $this->transactionId = $transactionId;
-        $this->queue = $queueName;
+        $this->onQueue($queueName);
     }
 
     /**
