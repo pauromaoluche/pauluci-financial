@@ -2,10 +2,8 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\Account;
 use App\Models\StatusTransaction;
-use App\Models\TypeTransaction;
-use App\Models\User;
+
 use App\Repositories\StatusTransactionRepositoryInterface;
 
 class StatusTransactionRepository implements StatusTransactionRepositoryInterface
@@ -13,7 +11,7 @@ class StatusTransactionRepository implements StatusTransactionRepositoryInterfac
     /**
      * Retorna informações do status pendente.
      *
-     * @return StatusTransaction A instância da conta recém-criada.
+     * @return StatusTransaction A instância do status transaction.
      */
     public function pendingStatus(): StatusTransaction
     {
