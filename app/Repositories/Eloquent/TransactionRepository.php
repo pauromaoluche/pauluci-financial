@@ -17,18 +17,17 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function createTransaction(TransactionDTO $data): Transaction
     {
         /** @var Transaction $account */
-        return $account->incomingTransactions()->create([
-            'sender_account_number' => null,
-            'type_transaction_id' => $data->type_transaction_id,
-            'amount' => $data->amount,
-            'status_transaction_id' => $data->status_transaction_id,
-            'description' => $data->description,
-            'batch_id' => $data->batch_id,
-        ]);
+        return $account->incomingTransactions()->create($data);
     }
 
     public function findById(int $id): ?Transaction
     {
         return Transaction::find($id);
+    }
+
+    public function update(Transaction $data): Transaction
+    {
+        $data->save();
+        return $data;
     }
 }

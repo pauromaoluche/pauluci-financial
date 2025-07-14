@@ -8,6 +8,6 @@ use App\Models\Transaction;
 interface TransactionRepositoryInterface
 {
     public function createTransaction(TransactionDTO $data): Transaction;
-
     public function findById(int $id): ?Transaction;
+    public function update(Transaction $data): Transaction;
 }

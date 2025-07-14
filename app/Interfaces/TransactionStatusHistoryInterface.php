@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-use App\DTOs\CreateTransactionStatusHistoryDTO;
+use App\Models\Transaction;
 use App\Models\TransactionStatusHistory;
 
 interface TransactionStatusHistoryInterface
@@ -10,8 +10,8 @@ interface TransactionStatusHistoryInterface
     /**
      * Realiza a criação novo log de transação.
      *
-     * @param CreateTransactionStatusHistoryDTO $data
+     * @param Transaction $data
      * @return TransactionStatusHistory
      */
-    public function createTransactionHistory(CreateTransactionStatusHistoryDTO $data): TransactionStatusHistory;
+    public function createTransactionHistory(Transaction $data): TransactionStatusHistory;
 }

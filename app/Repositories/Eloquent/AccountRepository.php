@@ -18,6 +18,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function createForUser(User $user, string $accountNumber): Account
     {
         // O método create() da relação hasOne retorna uma instância do modelo relacionado (Account)
+        /** @var Account $user */
         return $user->account()->create([
             'account_number' => $accountNumber,
             'balance' => 0.00,
@@ -35,5 +36,17 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // Correção: Usar $accountNumber em vez de $number
         return Account::where('account_number', $accountNumber)->first();
+    }
+
+    /**
+     * Metodo que salve alterações na conta
+     *
+     * @param Account $account O número da conta a ser pesquisado.
+     * @return Account|null A instância da conta se encontrada, ou null caso contrário.
+     */
+    public function update(Account $account): Account
+    {
+        $account->save();
+        return $account;
     }
 }

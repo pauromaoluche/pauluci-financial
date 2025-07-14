@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\DTOs\CreateTransactionStatusHistoryDTO;
 use App\Interfaces\TransactionStatusHistoryInterface;
+use App\Models\Transaction;
 use App\Models\TransactionStatusHistory;
 use App\Repositories\TransactionStatusHistoryRepositoryInterface;
 
@@ -14,7 +14,7 @@ class TransactionStatusHistoryService implements TransactionStatusHistoryInterfa
     ) {
     }
 
-    public function createTransactionHistory(CreateTransactionStatusHistoryDTO $data): TransactionStatusHistory
+    public function createTransactionHistory(Transaction $data): TransactionStatusHistory
     {
         return $this->transactionStatusHistory->createTransactionHistory($data);
     }

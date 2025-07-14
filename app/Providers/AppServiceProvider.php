@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Interfaces\AccountServiceInterface;
 use App\Interfaces\NotificationServiceInterface;
+use App\Interfaces\TransactionConfirmationStrategyInterface;
 use App\Interfaces\TransactionServiceInterface;
 use App\Interfaces\TransactionStatusHistoryInterface;
 use App\Interfaces\UserServiceInterface;
@@ -24,6 +25,7 @@ use App\Services\NotificationService;
 use App\Services\TransactionService;
 use App\Services\TransactionStatusHistoryService;
 use App\Services\UserService;
+use App\Strategies\TransactionConfirmation\DepositConfirmationStrategy;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -48,6 +50,19 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TransactionServiceInterface::class, TransactionService::class);
 
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
+
+        $this->app->bind(TransactionConfirmationStrategyInterface::class, function ($app, $parameters) {
+            $typeTransactionId = $parameters['type_transaction_id'] ?? null;
+
+            switch ($typeTransactionId) {
+                case 1:
+                    return $app->make(DepositConfirmationStrategy::class);
+                case 2:
+                    return $app->make(TransferConfirmationStrategy::class);
+                default:
+                    throw new \InvalidArgumentException("Nenhuma estratégia de confirmação definida para o tipo de transação ID: {$typeTransactionId}");
+            }
+        });
     }
 
     /**

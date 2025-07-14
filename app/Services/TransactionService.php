@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
-use App\DTOs\CreateTransactionStatusHistoryDTO;
 use App\DTOs\TransactionDTO;
+use App\Interfaces\TransactionConfirmationStrategyInterface;
 use App\Interfaces\TransactionServiceInterface;
 use App\Interfaces\TransactionStatusHistoryInterface;
+use App\Jobs\ConfirmTransactionJob;
 use App\Models\Transaction;
 use App\Repositories\AccountRepositoryInterface;
 use App\Repositories\TransactionRepositoryInterface;
@@ -16,11 +17,11 @@ class TransactionService implements TransactionServiceInterface
     public function __construct(
         protected TransactionRepositoryInterface $transactionRepository,
         protected TransactionStatusHistoryInterface $transactionStatusHistory,
-        protected AccountRepositoryInterface $accountRepository
+        protected AccountRepositoryInterface $accountRepository,
     ) {
     }
 
-    public function createTransaction(TransactionDTO $data): Transaction
+    public function createTransaction(TransactionDTO $data, $queue): Transaction
     {
 
         $account = $this->accountRepository->findByAccountNumber($data->accountNumber);
@@ -31,16 +32,39 @@ class TransactionService implements TransactionServiceInterface
             ]);
         }
 
+        if (!$account->active) {
+            throw ValidationException::withMessages([
+                'warning' => ['A conta esta inativa.']
+            ]);
+        }
+
         $transaction = $this->transactionRepository->createTransaction($data);
 
-        $this->transactionStatusHistory->createTransactionHistory(
-            new CreateTransactionStatusHistoryDTO(
-                transaction_id: $transaction->id,
-                status_transaction_id: $transaction->status_transaction_id,
-                message: $transaction->description
-            )
-        );
+        $this->transactionStatusHistory->createTransactionHistory($transaction);
+
+        ConfirmTransactionJob::dispatch($transaction->id, $queue);
 
         return $transaction;
+    }
+
+    public function confirmTransaction(int $transactionId): Transaction
+    {
+        $transaction = $this->transactionRepository->findById($transactionId);
+
+        if (!$transaction) {
+            throw ValidationException::withMessages([
+                'account' => ['Conta para deposito não existe.']
+            ]);
+        }
+
+        $strategy = app()->make(TransactionConfirmationStrategyInterface::class, [
+            'type_transaction_id' => $transaction->type_transaction_id
+        ]);
+
+        $confirmedTransaction = $strategy->confirm($transaction);
+
+        $this->transactionStatusHistory->createTransactionHistory($confirmedTransaction);
+
+        return $confirmedTransaction;
     }
 }

@@ -10,7 +10,12 @@ class UserRepository implements UserRepositoryInterface
 {
     public function create(CreateUserDTO $data): User
     {
-        return User::create($data);
+        return User::create([
+            'name' => $data->name,
+            'email' => $data->email,
+            'password' => $data->password,
+            'cpf' => $data->cpf,
+        ]);
     }
 
     public function findByEmail(string $email): ?User

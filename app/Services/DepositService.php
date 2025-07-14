@@ -32,7 +32,7 @@ class DepositService implements DepositServiceInterface
         if ($data->amount < 0) {
             //chamar fila e disparar evento no front
             throw ValidationException::withMessages([
-                'amount' => ['O valor do deposito deve sser positivo.']
+                'amount' => ['O valor do deposito deve ser positivo.']
             ]);
         }
 
@@ -48,13 +48,13 @@ class DepositService implements DepositServiceInterface
             status_transaction_id: $pendingStatus->id,
             description: $pendingStatus->description,
             error_message: null,
-            batch_id: (string) Str::uuid(),
+            batch_id: (string) Str::uuid()
         );
 
 
-        return DB::transaction(function () use ($transactionDTO) {
+        return DB::transaction(function () use ($transactionDTO, $depositType) {
 
-            $transaction = $this->transactionService->createTransaction($transactionDTO);
+            $transaction = $this->transactionService->createTransaction($transactionDTO, $depositType->name);
 
             return $transaction;
         });
