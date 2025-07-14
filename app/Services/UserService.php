@@ -9,7 +9,6 @@ use App\Interfaces\NotificationServiceInterface;
 use App\Interfaces\UserServiceInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class UserService implements UserServiceInterface
@@ -30,12 +29,7 @@ class UserService implements UserServiceInterface
         }
 
         return DB::transaction(function () use ($data) {
-            $user = $this->userRepository->create([
-                'name' => $data->name,
-                'email' => $data->email,
-                'cpf' => $data->cpf,
-                'password' => Hash::make($data->password),
-            ]);
+            $user = $this->userRepository->create($data);
 
             $this->accountService->createAccountForUser($user);
 

@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\Account; // Importante: Garanta que esta linha esteja presente
-use App\Models\User;   // Importante: Garanta que esta linha esteja presente
+use App\Models\Account;
+use App\Models\User;
 use App\Repositories\AccountRepositoryInterface;
 
 class AccountRepository implements AccountRepositoryInterface
