@@ -27,4 +27,14 @@ class TypeTransactionRepository implements TypeTransactionRepositoryInterface
     {
         return TypeTransaction::find(1);
     }
+
+    public function findById(int $id): TypeTransaction
+    {
+        return TypeTransaction::find(1);
+    }
+
+    public function findByIds(array $ids): Collection
+    {
+        return TypeTransaction::whereIn('id', $ids)->get();
+    }
 }

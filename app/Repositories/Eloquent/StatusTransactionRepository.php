@@ -18,7 +18,7 @@ class StatusTransactionRepository implements StatusTransactionRepositoryInterfac
         return StatusTransaction::find(1);
     }
 
-        /**
+    /**
      * Retorna informações do status completo.
      *
      * @return StatusTransaction A instância do status transaction.
@@ -26,5 +26,10 @@ class StatusTransactionRepository implements StatusTransactionRepositoryInterfac
     public function completedStatus(): StatusTransaction
     {
         return StatusTransaction::find(2);
+    }
+
+    public function findById(int $id): StatusTransaction
+    {
+        return StatusTransaction::find($id);
     }
 }

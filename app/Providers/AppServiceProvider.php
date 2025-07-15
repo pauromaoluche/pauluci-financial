@@ -10,6 +10,7 @@ use App\Interfaces\TransactionConfirmationStrategyInterface;
 use App\Interfaces\TransactionJobDispatcherInterface;
 use App\Interfaces\TransactionServiceInterface;
 use App\Interfaces\TransactionStatusHistoryInterface;
+use App\Interfaces\TransferServiceInterface;
 use App\Interfaces\UserServiceInterface;
 use App\Repositories\AccountRepositoryInterface;
 use App\Repositories\Eloquent\AccountRepository;
@@ -30,8 +31,10 @@ use App\Services\NotificationService;
 use App\Services\TransactionJobDispatcherService;
 use App\Services\TransactionService;
 use App\Services\TransactionStatusHistoryService;
+use App\Services\TransferService;
 use App\Services\UserService;
 use App\Strategies\DepositConfirmationStrategy;
+use App\Strategies\TransferConfirmationStrategy;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -57,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TransactionJobDispatcherInterface::class, TransactionJobDispatcherService::class);
         $this->app->bind(DepositServiceInterface::class, DepositService::class);
         $this->app->bind(BalanceServiceInterface::class, BalanceService::class);
+        $this->app->bind(TransferServiceInterface::class, TransferService::class);
 
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
 
@@ -66,6 +70,8 @@ class AppServiceProvider extends ServiceProvider
             switch ($typeTransactionId) {
                 case 1:
                     return $app->make(DepositConfirmationStrategy::class);
+                case 2:
+                    return $app->make(TransferConfirmationStrategy::class);
                 default:
                     throw new \InvalidArgumentException("Nenhuma estratégia de confirmação definida para o tipo de transação ID: {$typeTransactionId}");
             }

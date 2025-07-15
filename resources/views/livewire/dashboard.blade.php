@@ -32,13 +32,13 @@
         <section class="space-y-4">
             <h2 class="text-lg font-medium">Ações rápidas</h2>
             <div class="grid gap-4 sm:grid-cols-3 max-w-md">
-                <button
-                    class="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-white shadow hover:bg-blue-700 focus:outline-none">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 5v14m7-7H5" />
+                <a href="{{ route('dashboard.transfer') }}"
+                    class="flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 shadow ring-1 ring-gray-200 hover:bg-gray-50">
+                               <svg class="h-5 w-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 6l4 8H8l4-8z" />
                     </svg>
                     Transferir
-                </button>
+                </a>
                 <button
                     class="flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 shadow ring-1 ring-gray-200 hover:bg-gray-50">
                     <svg class="h-5 w-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">

@@ -13,7 +13,7 @@ use App\Repositories\TransactionRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
-class DepositConfirmationStrategy implements TransactionConfirmationStrategyInterface
+class TransferConfirmationStrategy implements TransactionConfirmationStrategyInterface
 {
     // Injete todas as dependências que esta estratégia precisa
     public function __construct(
@@ -31,14 +31,15 @@ class DepositConfirmationStrategy implements TransactionConfirmationStrategyInte
 
         if ($transaction->status_transaction_id !== 1) {
             throw ValidationException::withMessages([
-                'error' => ['Essa transação não existe.']
+                'error' => ['Esta transação já foi processada ou não pode ser confirmada.']
             ]);
         }
 
-
+        $senderAccount = $this->accountRepository->findByAccountNumber($transaction->sender_account_number);
         $recipientAccount = $this->accountRepository->findByAccountNumber($transaction->recipient_account_number);
 
-        // Lógica ESPECÍFICA de depósito
+        $this->balanceService->remove($senderAccount, $transaction->amount);
+
         $this->balanceService->add($recipientAccount, $transaction->amount);
 
         $completedStatus = $this->statusTransactionRepository->completedStatus();

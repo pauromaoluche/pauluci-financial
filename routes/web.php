@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Livewire\Auth\AuthUser as AuthAuthUser;
 use App\Livewire\Auth\VerifyEmailNotice;
 use App\Livewire\Transaction\Deposit;
+use App\Livewire\Transaction\Transfer;
 
 Route::get('/', Home::class)->name('index');
 
@@ -27,5 +28,6 @@ Route::middleware([AuthenticationMiddleware::class, 'verified'])->group(function
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::get('/', Dashboard::class)->name('index');
         Route::get('/depositar', Deposit::class)->name('deposit');
+        Route::get('/transferir', Transfer::class)->name('transfer');
     });
 });

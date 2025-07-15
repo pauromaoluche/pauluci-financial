@@ -2,35 +2,35 @@
 
 namespace App\Jobs;
 
-use App\DTOs\DepositDTO;
-use App\Interfaces\DepositServiceInterface;
+use App\DTOs\TransferDTO;
+use App\Interfaces\TransferServiceInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Validation\ValidationException;
 
-class ProcessDepositJob implements ShouldQueue
+class ProccessTransferJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
-    protected $depositData;
+    protected $transferData;
     /**
      * Create a new job instance.
      */
-    public function __construct(DepositDTO $depositDTO)
+    public function __construct(TransferDTO $transferDTO)
     {
-        $this->depositData = $depositDTO;
-        $this->onQueue('deposit');
+        $this->transferData = $transferDTO;
+        $this->onQueue('transfer_in');
     }
 
     /**
      * Execute the job.
      */
-    public function handle(DepositServiceInterface $depositService): void
+    public function handle(TransferServiceInterface $transferService): void
     {
         try {;
-            $depositService->deposit($this->depositData);
+            $transferService->transfer($this->transferData);
         } catch (ValidationException $e) {
             report($e);
         } catch (\Exception $e) {

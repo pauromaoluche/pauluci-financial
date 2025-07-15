@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\DTOs\DepositDTO;
 use App\DTOs\TransactionDTO;
-use App\Interfaces\DepositServiceInterface;
+use App\DTOs\TransferDTO;
 use App\Interfaces\TransactionServiceInterface;
+use App\Interfaces\TransferServiceInterface;
 use App\Models\Transaction;
 use App\Repositories\StatusTransactionRepositoryInterface;
 use App\Repositories\TypeTransactionRepositoryInterface;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 
-class DepositService implements DepositServiceInterface
+class TransferService implements TransferServiceInterface
 {
     public function __construct(
         protected StatusTransactionRepositoryInterface $statusTransactionRepository,
@@ -22,7 +22,7 @@ class DepositService implements DepositServiceInterface
     ) {
     }
 
-    public function deposit(DepositDTO $data): Transaction
+    public function transfer(TransferDTO $data): Transaction
     {
 
         if ($data->amount <= 0) {
@@ -33,13 +33,13 @@ class DepositService implements DepositServiceInterface
         }
 
         $pendingStatus  = $this->statusTransactionRepository->pendingStatus();
-        $depositType = $this->typeTransactionRepository->depositType();
+        $typeTransaction = $this->typeTransactionRepository->findById(2);
 
         $transactionDTO = new TransactionDTO(
-            accountNumber: $data->accountNumber,
-            sender_account_number: null,
-            recipient_account_number: $data->accountNumber,
-            type_transaction_id: $depositType->id,
+            accountNumber: $data->sender_account_number,
+            sender_account_number: $data->sender_account_number,
+            recipient_account_number: $data->recipient_account_number,
+            type_transaction_id: $data->type_transaction_id,
             amount: $data->amount,
             status_transaction_id: $pendingStatus->id,
             description: $pendingStatus->description,
@@ -47,7 +47,7 @@ class DepositService implements DepositServiceInterface
             batch_id: (string) Str::uuid()
         );
 
-        $transaction = $this->transactionService->createTransaction($transactionDTO, $depositType->name);
+        $transaction = $this->transactionService->createTransaction($transactionDTO, $typeTransaction->name);
 
         return $transaction;
     }

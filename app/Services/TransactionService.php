@@ -9,7 +9,10 @@ use App\Interfaces\TransactionStatusHistoryInterface;
 use App\Jobs\ConfirmTransactionJob;
 use App\Models\Transaction;
 use App\Repositories\AccountRepositoryInterface;
+use App\Repositories\StatusTransactionRepositoryInterface;
 use App\Repositories\TransactionRepositoryInterface;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class TransactionService implements TransactionServiceInterface
@@ -19,6 +22,7 @@ class TransactionService implements TransactionServiceInterface
         protected TransactionStatusHistoryInterface $transactionStatusHistory,
         protected AccountRepositoryInterface $accountRepository,
         protected TransactionJobDispatcherService $transactionJobDispatcher,
+        protected StatusTransactionRepositoryInterface $statusTransactionRepository
     ) {
     }
 
@@ -43,7 +47,7 @@ class TransactionService implements TransactionServiceInterface
 
         $this->transactionStatusHistory->createTransactionHistory($transaction);
 
-         $this->transactionJobDispatcher->dispatchConfirmationJob($transaction->id, $queue);
+        $this->transactionJobDispatcher->dispatchConfirmationJob($transaction->id, $queue);
 
         return $transaction;
     }
@@ -58,14 +62,30 @@ class TransactionService implements TransactionServiceInterface
             ]);
         }
 
-        $strategy = app()->make(TransactionConfirmationStrategyInterface::class, [
-            'type_transaction_id' => $transaction->type_transaction_id
-        ]);
+        try {
+            return DB::transaction(function () use ($transaction) {
+                $strategy = app()->make(TransactionConfirmationStrategyInterface::class, [
+                    'type_transaction_id' => $transaction->type_transaction_id
+                ]);
 
-        $confirmedTransaction = $strategy->confirm($transaction);
 
-        $this->transactionStatusHistory->createTransactionHistory($confirmedTransaction);
+                $confirmedTransaction = $strategy->confirm($transaction);
 
-        return $confirmedTransaction;
+                $this->transactionStatusHistory->createTransactionHistory($confirmedTransaction);
+
+                return $confirmedTransaction;
+            });
+        } catch (\Exception $e) {
+            $failedStatus = $this->statusTransactionRepository->findById(3);
+
+            $transaction->status_transaction_id = $failedStatus->id;
+            $transaction->description = $failedStatus->description;
+            $transaction->error_message = $e->getMessage();
+            $this->transactionRepository->update($transaction);
+
+            $this->transactionStatusHistory->createTransactionHistory($transaction);
+
+            return $transaction;
+        }
     }
 }

@@ -9,4 +9,6 @@ interface TypeTransactionRepositoryInterface
 {
     public function getAll(): Collection;
     public function depositType(): TypeTransaction;
+    public function findById(int $id): TypeTransaction;
+    public function findByIds(array $ids): Collection;
 }

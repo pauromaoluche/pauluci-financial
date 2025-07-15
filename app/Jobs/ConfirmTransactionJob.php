@@ -33,7 +33,7 @@ class ConfirmTransactionJob implements ShouldQueue
             $transactionService->confirmTransaction($this->transactionId);
         } catch (\Exception $e) {
             report($e);
-            throw $e;
+            //throw $e;
         }
     }
 }
