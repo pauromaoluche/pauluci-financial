@@ -48,12 +48,14 @@ class TransactionRepository implements TransactionRepositoryInterface
         ];
 
         return Transaction::select($transactionSelect)
-            ->whereHas('senderAccount', function ($query) use ($userId) {
-                $query->where('user_id', $userId);
+            ->where(function ($query) use ($userId) {
+                $query->whereHas('senderAccount', function ($q) use ($userId) {
+                    $q->where('user_id', $userId);
+                })->orWhereHas('recipientAccount', function ($q) use ($userId) {
+                    $q->where('user_id', $userId);
+                });
             })
-            ->orWhereHas('recipientAccount', function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
+            ->where('status_transaction_id', '!=', 3)
             ->with([
                 'senderAccount' => function ($query) {
                     $query->select(['id', 'user_id', 'account_number'])
@@ -63,7 +65,8 @@ class TransactionRepository implements TransactionRepositoryInterface
                     $query->select(['id', 'user_id', 'account_number'])
                         ->with(['user:id,name']);
                 },
-                'typeTransaction:id,description'
+                'typeTransaction:id,description',
+                'statusTransaction:id,description'
             ])
             ->orderByDesc('created_at')
             ->limit($limit)

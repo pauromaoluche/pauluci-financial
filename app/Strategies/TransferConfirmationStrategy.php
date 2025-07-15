@@ -38,7 +38,11 @@ class TransferConfirmationStrategy implements TransactionConfirmationStrategyInt
         $senderAccount = $this->accountRepository->findByAccountNumber($transaction->sender_account_number);
         $recipientAccount = $this->accountRepository->findByAccountNumber($transaction->recipient_account_number);
 
-        $this->balanceService->remove($senderAccount, $transaction->amount);
+        if ($transaction->type_transaction_id == 2) {
+            $this->balanceService->remove($senderAccount, $transaction->amount);
+        } else {
+            $this->balanceService->removeCredit($senderAccount, $transaction->amount);
+        }
 
         $this->balanceService->add($recipientAccount, $transaction->amount);
 

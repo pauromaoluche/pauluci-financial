@@ -64,4 +64,25 @@ class BalanceService implements BalanceServiceInterface
 
         return $this->accountRepository->update($account);
     }
+
+    public function removeCredit(Account $data, float $amount): Account
+    {
+        if ($amount <= 0) {
+            throw ValidationException::withMessages([
+                'warning' => ['O valor a ser removido deve ser positivo.']
+            ]);
+        }
+        // Recarregar a conta para garantir que estamos trabalhando com os dados mais recentes
+        $account = $this->accountRepository->findByAccountNumber($data->account_number);
+
+        if (!$account->active) {
+            throw ValidationException::withMessages([
+                'warning' => ['A conta esta inativa.']
+            ]);
+        }
+
+        $account->balance -= $amount;
+
+        return $this->accountRepository->update($account);
+    }
 }

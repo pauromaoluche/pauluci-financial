@@ -8,7 +8,6 @@
                       class="rounded-lg border-gray-300 px-3 py-2 ring-1 ring-inset ring-gray-200 focus:ring-blue-500">
                       <option value="0" disabled>Selecione uma forma</option>
                       @foreach ($transactionTypes as $type)
-                          {{ $type }}
                           <option value="{{ $type->id }}">
                               {{ $type->description }}
                           </option>

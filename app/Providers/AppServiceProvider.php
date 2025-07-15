@@ -72,6 +72,8 @@ class AppServiceProvider extends ServiceProvider
                     return $app->make(DepositConfirmationStrategy::class);
                 case 2:
                     return $app->make(TransferConfirmationStrategy::class);
+                case 3:
+                    return $app->make(TransferConfirmationStrategy::class);
                 default:
                     throw new \InvalidArgumentException("Nenhuma estratégia de confirmação definida para o tipo de transação ID: {$typeTransactionId}");
             }
