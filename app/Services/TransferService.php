@@ -33,7 +33,7 @@ class TransferService implements TransferServiceInterface
         }
 
         $pendingStatus  = $this->statusTransactionRepository->pendingStatus();
-        $typeTransaction = $this->typeTransactionRepository->findById(2);
+        $typeTransaction = $this->typeTransactionRepository->findById($data->type_transaction_id);
 
         $transactionDTO = new TransactionDTO(
             accountNumber: $data->sender_account_number,
