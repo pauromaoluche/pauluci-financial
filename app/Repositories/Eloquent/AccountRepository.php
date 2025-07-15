@@ -34,9 +34,20 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function findByAccountNumber(string $accountNumber): ?Account
     {
-        // Correção: Usar $accountNumber em vez de $number
         return Account::where('account_number', $accountNumber)->first();
     }
+
+    /**
+     * Encontra uma conta pelo seu número.
+     *
+     * @param string $userId O número da conta a ser pesquisado.
+     * @return Account|null A instância da conta se encontrada, ou null caso contrário.
+     */
+    public function findByUserId(string $userId): ?Account
+    {
+        return Account::where('user_id', $userId)->first();
+    }
+
 
     /**
      * Metodo que salve alterações na conta
