@@ -63,12 +63,12 @@ services:
         networks:
             - sail
     laravel-queue-worker:
-        build: # Use a mesma build que o laravel.test para garantir as mesmas dependências e ambiente
+        build:
             context: './vendor/laravel/sail/runtimes/8.4'
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: 'sail-8.4/app' # Reutiliza a imagem base para consistência
+        image: 'sail-8.4/app'
         command: sh -c "php /var/www/html/artisan queue:work --queue=transfer_in,deposit,notification,email,default --verbose --tries=5 --timeout=90"
         environment:
             WWWUSER: '${WWWUSER}'
@@ -80,10 +80,9 @@ services:
             DB_DATABASE: '${DB_DATABASE}'
             DB_USERNAME: '${DB_USERNAME}'
             DB_PASSWORD: '${DB_PASSWORD}'
-            QUEUE_CONNECTION: 'database' # Configure sua conexão de fila aqui (database, redis, sqs, etc.)
-            # Adicione quaisquer outras variáveis de ambiente que seus jobs em fila possam precisar
+            QUEUE_CONNECTION: 'database'
         volumes:
-            - '.:/var/www/html' # Monte o código do projeto
+            - '.:/var/www/html'
         networks:
             - sail
         depends_on:
@@ -92,28 +91,28 @@ services:
         restart: unless-stopped
 
     reverb:
-        build: # Use a mesma build do laravel.test para garantir o ambiente PHP e as dependências Laravel
+        build:
             context: './vendor/laravel/sail/runtimes/8.4'
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: 'sail-8.4/app' # Reutiliza a imagem base para consistência
-        command: php artisan reverb:start --host=0.0.0.0 --port=${REVERB_PORT:-8080} # Inicia o servidor Reverb
+        image: 'sail-8.4/app'
+        command: php artisan reverb:start --host=0.0.0.0 --port=${REVERB_PORT:-8080}
         ports:
-            - '${REVERB_PORT:-8080}:${REVERB_PORT:-8080}' # Mapeia a porta do Reverb para o host
+            - '${REVERB_PORT:-8080}:${REVERB_PORT:-8080}'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
             APP_ENV: '${APP_ENV}'
-            # Variáveis do Reverb que ele precisa para iniciar
+
             REVERB_APP_ID: '${REVERB_APP_ID}'
             REVERB_APP_KEY: '${REVERB_APP_KEY}'
             REVERB_APP_SECRET: '${REVERB_APP_SECRET}'
-            REVERB_HOST: '0.0.0.0' # Importante para escutar em todas as interfaces dentro do container
+            REVERB_HOST: '0.0.0.0'
             REVERB_PORT: '${REVERB_PORT:-8080}'
-            REVERB_SCHEME: '${REVERB_SCHEME:-http}' # Certifique-se que o scheme está correto (http ou https)
+            REVERB_SCHEME: '${REVERB_SCHEME:-http}'
         volumes:
-            - '.:/var/www/html' # Monta o código do projeto para que o artisan seja encontrado
+            - '.:/var/www/html'
         networks:
             - sail
         depends_on:
