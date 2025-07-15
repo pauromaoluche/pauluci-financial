@@ -3,6 +3,7 @@
 use App\Http\Middleware\AuthenticationMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Livewire\Dashboard\BankStatement;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Transaction\Deposit;
 use App\Livewire\Dashboard\Transaction\Transfer;
@@ -28,5 +29,6 @@ Route::middleware([AuthenticationMiddleware::class, 'verified'])->group(function
         Route::get('/', Dashboard::class)->name('index');
         Route::get('/depositar', Deposit::class)->name('deposit');
         Route::get('/transferir', Transfer::class)->name('transfer');
+        Route::get('/extrato', BankStatement::class)->name('bankStatement');
     });
 });

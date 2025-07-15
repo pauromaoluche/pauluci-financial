@@ -23,4 +23,13 @@ interface BalanceServiceInterface
      * @return Account
      */
     public function remove(Account $account, float $amount): Account;
+
+    /**
+     * Remove valor da conta, mas caso não tiver o valor, é removido do mesmo jeito, e fica com saldo negativo.
+     *
+     * @param Account $account
+     * @param float $amount
+     * @return Account
+     */
+    public function removeCredit(Account $account, float $amount): Account;
 }
