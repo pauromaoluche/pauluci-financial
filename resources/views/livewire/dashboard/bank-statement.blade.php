@@ -15,7 +15,7 @@
     </section>
 
     <button wire:click="refund">
-        teste
+        reembolso
     </button>
 
     <!-- Lista de transações ---------------------------------------------->
