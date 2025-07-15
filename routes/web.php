@@ -1,19 +1,18 @@
 <?php
 
 use App\Http\Middleware\AuthenticationMiddleware;
-use App\Livewire\Dashboard;
-use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Livewire\Auth\AuthUser as AuthAuthUser;
-use App\Livewire\Auth\VerifyEmailNotice;
-use App\Livewire\Transaction\Deposit;
-use App\Livewire\Transaction\Transfer;
+use App\Livewire\Dashboard\Dashboard;
+use App\Livewire\Dashboard\Transaction\Deposit;
+use App\Livewire\Dashboard\Transaction\Transfer;
+use App\Livewire\Web\Auth\AuthUser;
+use App\Livewire\Web\Auth\VerifyEmailNotice;
+use App\Livewire\Web\Home;
 
 Route::get('/', Home::class)->name('index');
 
-Route::get('auth', AuthAuthUser::class)->name('auth')->middleware('guest');
+Route::get('auth', AuthUser::class)->name('auth')->middleware('guest');
 
 Route::get('/email/verify', VerifyEmailNotice::class)
     ->middleware([AuthenticationMiddleware::class])
