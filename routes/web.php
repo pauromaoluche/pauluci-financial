@@ -3,6 +3,7 @@
 use App\Http\Middleware\AuthenticationMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\RefundController;
 use App\Livewire\Dashboard\BankStatement;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Dashboard\Transaction\Deposit;
@@ -30,5 +31,15 @@ Route::middleware([AuthenticationMiddleware::class, 'verified'])->group(function
         Route::get('/depositar', Deposit::class)->name('deposit');
         Route::get('/transferir', Transfer::class)->name('transfer');
         Route::get('/extrato', BankStatement::class)->name('bankStatement');
+
+        Route::get('/reembolso/aprovar/{id}', [RefundController::class, 'approve'])
+            ->name('refund.approve')
+            ->middleware('signed');
+
+        Route::get('/reembolso/recusar/{id}', [RefundController::class, 'deny'])
+            ->name('refund.deny')
+            ->middleware('signed');
     });
 });
+
+

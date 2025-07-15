@@ -14,6 +14,10 @@
         </div>
     </section>
 
+    <button wire:click="refund">
+        teste
+    </button>
+
     <!-- Lista de transações ---------------------------------------------->
     <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 space-y-6">
         <h2 class="text-lg font-medium">Transações</h2>

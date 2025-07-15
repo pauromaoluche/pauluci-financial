@@ -9,5 +9,6 @@ interface UserRepositoryInterface
 {
     public function create(CreateUserDTO $data): User;
     public function findByEmail(string $email): ?User;
+    public function findById(int $id): ?User;
     public function save(User $user): User;
 }

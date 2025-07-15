@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\DTOs\RefundRequestDTO;
+use App\Interfaces\RefundRequestServiceInterface;
 use App\Models\Account;
 use App\Repositories\AccountRepositoryInterface;
 use App\Repositories\TransactionRepositoryInterface;
@@ -14,14 +16,16 @@ class BankStatement extends Component
     public ?Collection $transactions;
     protected TransactionRepositoryInterface $transactionRepository;
     protected AccountRepositoryInterface $accountRepository;
+    protected RefundRequestServiceInterface $refundRequestService;
     public Account $account;
     public ?float $credits = 0;
     public ?float $debits = 0;
 
-    public function boot(TransactionRepositoryInterface $transactionRepository, AccountRepositoryInterface $accountRepository)
+    public function boot(TransactionRepositoryInterface $transactionRepository, AccountRepositoryInterface $accountRepository, RefundRequestServiceInterface $refundRequestService)
     {
         $this->transactionRepository = $transactionRepository;
         $this->accountRepository = $accountRepository;
+        $this->refundRequestService = $refundRequestService;
     }
 
     public function mount()
@@ -36,6 +40,15 @@ class BankStatement extends Component
                 $this->debits += $item->amount;
             }
         }
+    }
+
+    public function refund()
+    {
+        $this->refundRequestService->refundRequest(new RefundRequestDTO(
+            transaction_id: 3,
+            requester_account_number: 5001570262,
+            status_transaction_id: 1
+        ));
     }
     public function render()
     {

@@ -23,6 +23,11 @@ class UserRepository implements UserRepositoryInterface
         return User::where('email', $email)->first();
     }
 
+    public function findById(int $id): ?User
+    {
+        return User::find($id);
+    }
+
     public function save(User $user): User
     {
         $user->save();
